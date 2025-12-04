@@ -1,0 +1,76 @@
+[
+    {
+        "arxiv_id": "2307.05440v1",
+        "title": "ISLTranslate: Dataset for Translating Indian Sign Language",
+        "abstract": "Sign languages are the primary means of communication for many hard-of-hearing people worldwide. Recently, to bridge the communication gap between the hard-of-hearing community and the rest of the population, several sign language translation datasets have been proposed to enable the development of statistical sign language translation systems. However, there is a dearth of sign language resources for the Indian sign language. This resource paper introduces ISLTranslate, a translation dataset for continuous Indian Sign Language (ISL) consisting of 31k ISL-English sentence/phrase pairs. To the best of our knowledge, it is the largest translation dataset for continuous Indian Sign Language. We provide a detailed analysis of the dataset. To validate the performance of existing end-to-end Sign language to spoken language translation systems, we benchmark the created dataset with a transformer-based model for ISL translation.",
+        "authors": [
+            "Abhinav Joshi",
+            "Susmit Agrawal",
+            "Ashutosh Modi"
+        ],
+        "submitted_date": "2023-07-11T17:06:52+00:00",
+        "pdf_url": "https://arxiv.org/pdf/2307.05440v1",
+        "similarity_score": 0.6995589733123779
+    },
+    {
+        "arxiv_id": "2412.11553v2",
+        "title": "Training Strategies for Isolated Sign Language Recognition",
+        "abstract": "Accurate recognition and interpretation of sign language are crucial for enhancing communication accessibility for deaf and hard of hearing individuals. However, current approaches of Isolated Sign Language Recognition (ISLR) often face challenges such as low data quality and variability in gesturing speed. This paper introduces a comprehensive model training pipeline for ISLR designed to accommodate the distinctive characteristics and constraints of the Sign Language (SL) domain. The constructed pipeline incorporates carefully selected image and video augmentations to tackle the challenges of low data quality and varying sign speeds. Including an additional regression head combined with IoU-balanced classification loss enhances the model's awareness of the gesture and simplifies capturing temporal information. Extensive experiments demonstrate that the developed training pipeline easily adapts to different datasets and architectures. Additionally, the ablation study shows that each proposed component expands the potential to consider ISLR task specifics. The presented strategies enhance recognition performance across various ISLR benchmarks and achieve state-of-the-art results on the WLASL and Slovo datasets.",
+        "authors": [
+            "Karina Kvanchiani",
+            "Roman Kraynov",
+            "Elizaveta Petrova",
+            "Petr Surovcev",
+            "Aleksandr Nagaev",
+            "Alexander Kapitanov"
+        ],
+        "submitted_date": "2024-12-16T08:37:58+00:00",
+        "pdf_url": "https://arxiv.org/pdf/2412.11553v2",
+        "similarity_score": 0.6607447862625122
+    },
+    {
+        "arxiv_id": "2507.20884v2",
+        "title": "The Importance of Facial Features in Vision-based Sign Language Recognition: Eyes, Mouth or Full Face?",
+        "abstract": "Non-manual facial features play a crucial role in sign language communication, yet their importance in automatic sign language recognition (ASLR) remains underexplored. While prior studies have shown that incorporating facial features can improve recognition, related work often relies on hand-crafted feature extraction and fails to go beyond the comparison of manual features versus the combination of manual and facial features. In this work, we systematically investigate the contribution of distinct facial regionseyes, mouth, and full faceusing two different deep learning models (a CNN-based model and a transformer-based model) trained on an SLR dataset of isolated signs with randomly selected classes. Through quantitative performance and qualitative saliency map evaluation, we reveal that the mouth is the most important non-manual facial feature, significantly improving accuracy. Our findings highlight the necessity of incorporating facial features in ASLR.",
+        "authors": [
+            "Dinh Nam Pham",
+            "Eleftherios Avramidis"
+        ],
+        "submitted_date": "2025-07-28T14:36:46+00:00",
+        "pdf_url": "https://arxiv.org/pdf/2507.20884v2",
+        "similarity_score": 0.6373666524887085
+    },
+    {
+        "arxiv_id": "2408.08544v1",
+        "title": "Scaling up Multimodal Pre-training for Sign Language Understanding",
+        "abstract": "Sign language serves as the primary meaning of communication for the deaf-mute community. Different from spoken language, it commonly conveys information by the collaboration of manual features, i.e., hand gestures and body movements, and non-manual features, i.e., facial expressions and mouth cues. To facilitate communication between the deaf-mute and hearing people, a series of sign language understanding (SLU) tasks have been studied in recent years, including isolated/continuous sign language recognition (ISLR/CSLR), gloss-free sign language translation (GF-SLT) and sign language retrieval (SL-RT). Sign language recognition and translation aims to understand the semantic meaning conveyed by sign languages from gloss-level and sentence-level, respectively. In contrast, SL-RT focuses on retrieving sign videos or corresponding texts from a closed-set under the query-by-example search paradigm. These tasks investigate sign language topics from diverse perspectives and raise challenges in learning effective representation of sign language videos. To advance the development of sign language understanding, exploring a generalized model that is applicable across various SLU tasks is a profound research direction.",
+        "authors": [
+            "Wengang Zhou",
+            "Weichao Zhao",
+            "Hezhen Hu",
+            "Zecheng Li",
+            "Houqiang Li"
+        ],
+        "submitted_date": "2024-08-16T06:04:25+00:00",
+        "pdf_url": "https://arxiv.org/pdf/2408.08544v1",
+        "similarity_score": 0.633731484413147
+    },
+    {
+        "arxiv_id": "1609.07876v1",
+        "title": "Lexicon-Free Fingerspelling Recognition from Video: Data, Models, and Signer Adaptation",
+        "abstract": "We study the problem of recognizing video sequences of fingerspelled letters in American Sign Language (ASL). Fingerspelling comprises a significant but relatively understudied part of ASL. Recognizing fingerspelling is challenging for a number of reasons: It involves quick, small motions that are often highly coarticulated; it exhibits significant variation between signers; and there has been a dearth of continuous fingerspelling data collected. In this work we collect and annotate a new data set of continuous fingerspelling videos, compare several types of recognizers, and explore the problem of signer variation. Our best-performing models are segmental (semi-Markov) conditional random fields using deep neural network-based features. In the signer-dependent setting, our recognizers achieve up to about 92% letter accuracy. The multi-signer setting is much more challenging, but with neural network adaptation we achieve up to 83% letter accuracies in this setting.",
+        "authors": [
+            "Taehwan Kim",
+            "Jonathan Keane",
+            "Weiran Wang",
+            "Hao Tang",
+            "Jason Riggle",
+            "Gregory Shakhnarovich",
+            "Diane Brentari",
+            "Karen Livescu"
+        ],
+        "submitted_date": "2016-09-26T07:34:24+00:00",
+        "pdf_url": "https://arxiv.org/pdf/1609.07876v1",
+        "similarity_score": 0.6293236613273621
+    }
+]

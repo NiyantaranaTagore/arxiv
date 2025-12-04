@@ -1,0 +1,6 @@
+keybert
+pypdf
+arxiv
+sentence-transformers
+scikit-learn
+numpy
