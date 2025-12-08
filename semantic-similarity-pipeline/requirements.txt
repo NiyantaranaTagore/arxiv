@@ -1,0 +1,7 @@
+PyYAML
+fpdf2
+sentence-transformers
+scikit-learn
+arxiv
+PyMuPDF
+numpy

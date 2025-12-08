@@ -1,0 +1,41 @@
+# --- File Paths ---
+# Path to the input PDF document you want to analyze.
+input_doc_path: "data/input/2502.02587v1.pdf"
+
+# Directory where the output PDF report will be saved.
+output_dir: "data/output/"
+
+# Directory containing the corpus of PDF documents to compare against.
+corpus_dir: "data/corpus/"
+
+# --- Model Configuration ---
+# Model for generating sentence embeddings.
+# Recommended: 'all-MiniLM-L6-v2' for a good balance of speed and accuracy.
+# Other options: 'paraphrase-mpnet-base-v2', 'all-mpnet-base-v2'
+embedding_model: 'all-MiniLM-L6-v2'
+
+# --- Similarity Analysis Hyperparameters ---
+# The similarity function to use. 'cosine' is standard for comparing embeddings.
+similarity_function: 'cosine'
+
+# The threshold for considering two sentences as similar.
+# Value should be between 0 and 1. A higher value means stricter similarity.
+similarity_threshold: 0.10
+
+# --- Corpus Source Configuration ---
+# Set to true to fetch the corpus dynamically from arXiv.org.
+# If false, the local 'corpus_dir' will be used.
+use_arxiv_corpus: true
+# The directory to store papers downloaded from arXiv.
+arxiv_download_dir: "data/corpus_arxiv/"
+# The maximum number of relevant papers to download from arXiv for analysis.
+max_arxiv_results: 5
+
+# --- Report Generation ---
+# Title for the generated report.
+report_title: "Semantic Similarity Analysis Report"
+
+# Font sizes for the report.
+font_size_title: 16
+font_size_abstract: 10
+font_size_sources: 9

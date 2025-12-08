@@ -1,0 +1,18 @@
+# Configuration for the ArXiv Crawler
+
+# --- Input and Output Paths ---
+document_path: "/home/ps07/Documents/Project/test/arxiv/arxiv_crawl_v2/2512.04062v1.pdf"  # Path to the input document (.txt or .pdf)
+output_file: "/home/ps07/Documents/Project/test/arxiv/arxiv_crawl_v2/similar_papers.json" # Path to the output JSON file
+
+# --- Model Configuration ---
+# A larger, more powerful model for semantic similarity.
+llm_model: 'llama3' # Local LLM to use for text correction via Ollama
+ollama_url: 'http://localhost:11434/api/generate'
+similarity_model: 'all-mpnet-base-v2'
+
+# --- Search and Filtering Parameters ---
+num_keywords: 5          # Number of keywords to extract
+max_papers: 200          # Maximum number of papers to fetch from ArXiv
+min_similarity: 0.6      # Minimum similarity score to include in the results
+title_weight: 0.4        # Weight for title similarity in the combined score
+abstract_weight: 0.6     # Weight for abstract similarity in the combined score

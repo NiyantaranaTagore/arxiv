@@ -1,6 +1,4 @@
-keybert
-pypdf
 arxiv
-sentence-transformers
+PyMuPDF
 scikit-learn
-numpy
+nltk
