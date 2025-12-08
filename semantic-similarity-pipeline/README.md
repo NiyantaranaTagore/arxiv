@@ -1,152 +1,168 @@
 # Semantic Similarity Pipeline
 
-This project provides a complete pipeline to analyze a source document and find semantically similar sentences within a corpus of other documents. The corpus can be a local collection of PDFs or can be dynamically fetched from [arXiv.org](https://arxiv.org) based on the source document's title.
-
-The final output is a detailed PDF report that highlights the similar sentences found in the source document's abstract and provides citations for the source papers.
+This project is a Python-based pipeline designed to analyze a given academic paper or document and identify semantic similarities within a corpus of other documents. It fetches relevant papers from arXiv, compares them sentence by sentence, and generates a clear, color-coded PDF report highlighting the sections with significant semantic overlap.
 
 ## Features
 
-- **PDF Text Extraction**: Extracts title and abstract from PDF documents.
-- **Dual Corpus Mode**:
-  - **Local**: Compares against a local directory of PDF files.
-  - **Dynamic (arXiv)**: Automatically searches and "crawls" relevant papers from arXiv.org based on the source document's title, using their abstracts for comparison without downloading the full PDFs.
-- **Semantic Analysis**: Uses state-of-the-art `sentence-transformers` models to generate vector embeddings and calculate semantic similarity.
-- **Configurable Pipeline**: All major parameters, including the embedding model, similarity threshold, and corpus mode, are configurable via a single `config.yaml` file.
-- **PDF Report Generation**: Produces a clean, easy-to-read PDF report showing the source abstract with highlighted sentences, similarity scores, and a list of sources.
+- **Semantic Analysis**: Utilizes state-of-the-art sentence-transformer models to understand the meaning behind sentences, not just keywords.
+- **Dynamic Corpus Generation**: Automatically searches and downloads relevant papers from arXiv.org based on the source document's title.
+- **Local Corpus Support**: Can also run comparisons against a local directory of PDF files.
+- **Configurable Similarity Threshold**: Easily adjust the sensitivity of the similarity detection.
+- **Detailed PDF Reporting**: Generates a PDF report where similar sentences in the source document are highlighted.
+- **Clear Source Referencing**:
+  - Each highlight is color-coded and annotated with a number `[#]` that links to a specific source document.
+  - A "Sources" section lists all documents that contain similar content, along with their title and the highest similarity score found.
+- **Highly Configurable**: All major parameters (file paths, model selection, thresholds, etc.) are managed in a simple `config.yaml` file.
 
 ## How It Works
 
-The pipeline is orchestrated by `main.py` and can be visualized with the following workflow.
+The pipeline follows a high-level, four-step process:
 
-### Detailed Workflow
+1.  **Load & Parse**: The source document is loaded, and its text is extracted and split into sentences.
+2.  **Fetch Corpus**: Relevant documents are either fetched from arXiv or loaded from a local directory.
+3.  **Analyze & Compare**: Sentences are converted into numerical vectors (embeddings) and compared for semantic similarity.
+4.  **Generate Report**: A PDF report is created, visually highlighting similar sentences and listing the sources.
 
-```
-[ Start ]
-    |
-    v
-[ configs/config.yaml ] -> Read by main.py
-    |
-    +----------------------------------------------------------------+
-    |                                                                |
-    v                                                                v
-[ data/input/source.pdf ]                                     [ Corpus Source Selection ]
-    |                                                                | (Based on 'use_arxiv_corpus')
-    | (load_source_document)                                         |
-    v                                                                +------------+
-[ Source Doc Object ]                                                |            |
-  - title                                                            | (true)     | (false)
-  - abstract                                                         v            v
-  - sentences[]                                          [ arXiv API Query ]  [ data/corpus/*.pdf ]
-    |                                                       (using source title)      |
-    |                                                                |            | (load_source_document)
-    |                                                                v            v
-    |                                                      [ In-Memory Corpus Objects ]
-    |                                                                |
-    +--------------------------------->[ SimilarityAnalyzer ]<-------+
-                                            |
-                                            | (find_similar_sentences)
-                                            v
-                                      [ Findings[] ]
-                               (List of similar sentence pairs)
-                                            |
-                                            v
-                                      [ reporting.py ] -> Generates -> [ data/output/report.pdf ]
-                                            |
-                                            v
-                                        [ End ]
-```
-
-The pipeline follows these main steps:
-
-1.  **Load Configuration**: Reads settings from `configs/config.yaml`.
-2.  **Load Source Document**: Extracts the title and abstract from the input PDF specified in the config.
-3.  **Build Corpus**:
-    - If `use_arxiv_corpus` is `true`, it queries the arXiv API using the source document's title and fetches the abstracts of the most relevant papers.
-    - Otherwise, it loads all PDF documents from the local `corpus_dir`.
-4.  **Analyze Similarity**:
-    - It generates sentence embeddings for the source abstract and all corpus abstracts using the specified transformer model.
-    - It calculates the cosine similarity between every sentence in the source document and every sentence in the corpus.
-5.  **Generate Report**: If any sentences are found with a similarity score above the configured threshold, it generates a PDF report detailing the findings.
+*(See the **Detailed Workflow** section below for a more in-depth explanation.)*
 
 ## Project Structure
 
 ```
 semantic-similarity-pipeline/
 ├── assets/
-│   └── fonts/              # Fonts for PDF report generation
+│   └── fonts/              # Stores .ttf font files for PDF reporting.
 ├── configs/
-│   └── config.yaml         # Main configuration file for the pipeline
+│   └── config.yaml         # Main configuration file for all parameters.
 ├── data/
-│   ├── input/              # Place your source PDF document here
-│   ├── output/             # Generated PDF reports are saved here
-│   └── corpus/             # (Optional) Local corpus of PDFs
+│   ├── input/              # Place your source PDF document here.
+│   ├── output/             # Generated PDF reports are saved here.
+│   └── corpus/             # Directory for the local corpus of documents.
 ├── pipeline/
-│   ├── __init__.py
-│   ├── arxiv_fetcher.py    # Handles searching and fetching data from arXiv
-│   ├── data_loader.py      # Loads config and processes documents
-│   ├── reporting.py        # Generates the final PDF report
-│   └── similarity_analyzer.py # Core logic for semantic analysis
+│   ├── corpus.py           # Handles fetching and processing of the document corpus.
+│   ├── data_loader.py      # Loads the source document and configuration.
+│   ├── reporting.py        # Generates the final PDF report.
+│   └── similarity.py       # Core logic for embedding and similarity calculation.
 ├── utils/
-│   ├── __init__.py
-│   └── text_utils.py       # Helper functions for text extraction and processing
-├── main.py                 # Main entry point to run the pipeline
-├── README.md               # This file
-└── requirements.txt        # Project dependencies
+│   └── text_utils.py       # Utility functions for text extraction and processing.
+├── main.py                 # The main entry point to run the pipeline.
+├── requirements.txt        # A list of all Python dependencies.
+└── README.md               # Project documentation.
 ```
+
+The pipeline follows a four-step process:
+
+1.  **Load & Parse**: The source document (`input_doc_path`) is loaded, and its text is extracted and split into sentences.
+2.  **Fetch Corpus**: Based on the configuration (`use_arxiv_corpus`), the pipeline either:
+    - Queries the arXiv API for relevant papers using the source document's title.
+    - Scans the local `corpus_dir` for documents.
+3.  **Analyze & Compare**:
+    - All sentences from the source and corpus documents are converted into numerical vectors (embeddings) using a sentence-transformer model.
+    - The pipeline then calculates the cosine similarity between sentences from the source document and sentences from the corpus.
+4.  **Generate Report**: If any sentence pairs exceed the `similarity_threshold`, a PDF report is generated in the `output_dir`. The report visually highlights the similar sentences and lists the corresponding sources.
 
 ## Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone <your-repo-url>
+    git clone <your-repository-url>
     cd semantic-similarity-pipeline
     ```
 
-2.  **Create and activate a virtual environment (recommended):**
+2.  **Create a virtual environment (recommended):**
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
     ```
 
 3.  **Install the required dependencies:**
+    The `requirements.txt` file lists all necessary packages.
     ```bash
     pip install -r requirements.txt
     ```
 
-## Usage
+4.  **Download Font Files**:
+    Ensure the specified TrueType font files (`Times New Roman.ttf` and `Times New Roman Bold.ttf`) are present in the `assets/fonts/` directory. The reporting module relies on these for PDF generation.
 
-1.  **Place your source document** inside the `data/input/` directory.
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repository-url>
+    cd semantic-similarity-pipeline
+    ```
 
-2.  **Configure the pipeline** by editing `configs/config.yaml`. Key options include:
-    - `input_doc_path`: Path to your source document.
-    - `use_arxiv_corpus`: Set to `true` to use arXiv or `false` to use the local `data/corpus/` directory.
-    - `max_arxiv_results`: The number of papers to fetch from arXiv.
-    - `similarity_threshold`: The minimum similarity score (0.0 to 1.0) to consider a match.
+2.  **Create a virtual environment (recommended):**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    ```
 
-3.  **Run the pipeline:**
+3.  **Install the required dependencies:**
+    A `requirements.txt` file should be created to list all dependencies.
+    ```bash
+    pip install -r requirements.txt
+    ```
+    Your `requirements.txt` should look something like this:
+    ```
+    fpdf2
+    sentence-transformers
+    torch
+    PyYAML
+    arxiv
+    PyMuPDF
+    ```
+
+## How to Run
+
+1.  **Configure the Analysis**:
+    Open `configs/config.yaml` and modify the parameters to suit your needs.
+
+    ```yaml
+    # Path to the input PDF document you want to analyze.
+    input_doc_path: "data/input/my_paper.pdf"
+
+    # Directory where the output PDF report will be saved.
+    output_dir: "data/output/"
+
+    # --- Corpus Source Configuration ---
+    # Set to true to fetch the corpus dynamically from arXiv.org.
+    use_arxiv_corpus: true
+
+    # The maximum number of relevant papers to fetch from arXiv.
+    # Set to -1 to fetch all available papers.
+    max_arxiv_results: 100
+
+    # The threshold for considering two sentences as similar (0.0 to 1.0).
+    similarity_threshold: 0.75
+    ```
+
+2.  **Place Your Input File**:
+    Make sure the document you want to analyze is placed in the path specified by `input_doc_path` (e.g., `data/input/my_paper.pdf`).
+
+3.  **Execute the Pipeline**:
+    Run the main script from the root directory of the project.
     ```bash
     python main.py
     ```
 
-4.  **Check the output**: The generated report will be saved in the `data/output/` directory.
+4.  **View the Report**:
+    Once the analysis is complete, a message will be printed to the console with the location of the report. You can find the generated `similarity_report.pdf` in the directory specified by `output_dir`.
 
-## Configuration Details
+## Detailed Workflow
 
-The `configs/config.yaml` file allows you to control the pipeline's behavior without changing the code.
+The pipeline's execution flow is orchestrated by `main.py` and is broken down as follows:
 
-| Parameter              | Description                                                                                             |
-| ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| `input_doc_path`       | Path to the source PDF you want to analyze.                                                             |
-| `output_dir`           | Directory where the final PDF report will be saved.                                                     |
-| `corpus_dir`           | Directory containing local PDFs to use as the corpus (if `use_arxiv_corpus` is `false`).                |
-| `embedding_model`      | The `sentence-transformers` model to use. `all-MiniLM-L6-v2` is a good default.                         |
-| `similarity_threshold` | The cutoff for similarity scores. A higher value means stricter matching.                               |
-| `use_arxiv_corpus`     | If `true`, the pipeline will query arXiv. If `false`, it will use `corpus_dir`.                         |
-| `max_arxiv_results`    | The maximum number of relevant papers to fetch from arXiv for comparison.                               |
-| `font_size_title`      | Font size for the main title in the PDF report.                                                         |
-| `font_size_abstract`   | Font size for the abstract text in the PDF report.                                                      |
-| `font_size_sources`    | Font size for the sources section in the PDF report.                                                    |
+1.  **Initialization**: The `main.py` script starts by loading the configuration from `configs/config.yaml` using the `load_config` function in `pipeline/data_loader.py`.
 
----
+2.  **Source Document Loading**: The primary document specified in `input_doc_path` is loaded. The `extract_text_from_pdf` and `split_into_sentences` utilities are used to parse its title and content into a structured format.
 
-This `README.md` provides a comprehensive guide for anyone looking to use or understand your project.
+3.  **Corpus Acquisition (`pipeline/corpus.py`)**:
+    - If `use_arxiv_corpus` is `true`, the pipeline constructs a formatted query from the source document's title and uses the `arxiv` library to find and download relevant papers.
+    - If `false`, the pipeline scans the `corpus_dir` and processes all PDF files found locally.
+
+4.  **Semantic Analysis (`pipeline/similarity.py`)**:
+    - The sentence-transformer model specified by `embedding_model` is loaded.
+    - All sentences from both the source document and the corpus documents are encoded into high-dimensional vectors (embeddings).
+    - The cosine similarity is calculated between each source sentence embedding and all corpus sentence embeddings.
+
+5.  **Filtering and Reporting (`pipeline/reporting.py`)**:
+    - Any sentence pair with a similarity score exceeding the `similarity_threshold` is collected as a "finding."
+    - If one or more findings exist, the `generate_report` function is triggered. It creates a new PDF, dynamically assigns colors to each source, highlights the relevant sentences with source numbers, and compiles a final list of sources with their maximum similarity scores.

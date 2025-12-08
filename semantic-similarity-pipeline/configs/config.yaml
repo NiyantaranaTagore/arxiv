@@ -26,16 +26,17 @@ similarity_threshold: 0.10
 # Set to true to fetch the corpus dynamically from arXiv.org.
 # If false, the local 'corpus_dir' will be used.
 use_arxiv_corpus: true
-# The directory to store papers downloaded from arXiv.
-arxiv_download_dir: "data/corpus_arxiv/"
-# The maximum number of relevant papers to download from arXiv for analysis.
-max_arxiv_results: 5
+
+# The maximum number of relevant papers to fetch from arXiv for analysis.
+# The arXiv API sorts by relevance, so the first few results are the most important.
+# Increasing this number will slow down the analysis but provide a more comprehensive comparison.
+max_arxiv_results: 100
 
 # --- Report Generation ---
 # Title for the generated report.
 report_title: "Semantic Similarity Analysis Report"
 
 # Font sizes for the report.
-font_size_title: 16
+font_size_title: 12
 font_size_abstract: 10
 font_size_sources: 9
